@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+
+    <!-- font awesome cdn -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- css link -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <div class="music-player">
+        <!-- oynatma listesi -->
+        <button id="playlist">
+            <i class="fa-solid fa-angle-down"></i>
+        </button>
+        <!-- foto -->
+        <img src="assets/cl.webp" alt="" id="song-image">
+        <!-- sarkı detayi -->
+        <div class="song-details">
+            <p id="song-name"></p>
+            <p id="song-artist"></p>
+        </div>
+
+        <!-- oynatma butonları -->
+        <div class="player-options">
+            <button id="shuffle"><i class="fa-solid fa-shuffle"></i></button>
+            <button id="prev"><i class="fa-solid fa-backward-step"></i></button>
+            <button id="play"><i class="fa-solid fa-play"></i></button>
+            <button id="pause" class="hide"><i class="fa-solid fa-pause"></i></button>
+            <button id="next"><i class="fa-solid fa-forward-step"></i></button>
+            <button id="repeat"><i class="fa-solid fa-repeat"></i></button>
+        </div>
+
+        <!-- ses kısmı -->
+        <audio id="audio" src="assets/cl-music.mp3" preload="metadata"></audio>
+        <div id="progress-bar">
+            <div id="current-progress"></div>
+        </div>
+
+        <!-- zaman ilerleyici ve sure -->
+        <div class="time-container">
+            <div id="current-time"></div>
+            <div id="max-duration"></div>
+        </div>
+
+        <!-- playlist container -->
+        <div id="playlist-container" class="hide">
+            <button id="close-button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <ul id="playlist-songs"></ul>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- script link -->
+    <script src="main.js"></script>
+  </body>
+</html>
