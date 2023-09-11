@@ -17,15 +17,17 @@ const progressBar = document.getElementById('progress-bar')
 const playListContainer = document.getElementById('playlist-container')
 const closeButton = document.getElementById('close-button')
 const playListSongs = document.getElementById('playlist-songs')
+
 const currentProgress = document.getElementById('current-progress')
 
 
 //indis
 let index
 
-//tekrar döngü
+//tekrari
 let loop
 
+//decode veya parse
 const songsList=[
     {
         name: "Champions League Music",
@@ -59,32 +61,32 @@ const songsList=[
     }
 ]
 
-// olaylar objesi
+//olaylar objesi
 let events = {
-    mouse:{
+    mouse: {
         click: "click"
     },
-    touch:{
+    touch: {
         click: "touchstart"
     }
 }
 
 let deviceType = ""
 
-const isTouchDevice = ()=>{
+const isTouchDevice = () => {
     try {
         document.createEvent('TouchEvent')
         deviceType = "touch"
         return true
-    } catch(error) {
-        deviceType="mouse"
+    } catch (error) {
+        deviceType = "mouse"
         return false
     }
 }
 
 // zaman formatlama
-const timeFormatter = (timeInput)=>{
-    let minute = Math.floor(timeInput/60)
+const timeFormatter = (timeInput) => {
+    let minute = Math.floor(timeInput / 60)
     minute = minute < 10 ? "0" + minute : minute
     let second = Math.floor(timeInput % 60)
     second = second < 10 ? "0" + second : second
@@ -92,73 +94,74 @@ const timeFormatter = (timeInput)=>{
 }
 
 //set song
-const setSong=(arrayIndex)=>{
+
+const setSong = (arrayIndex) => {
     //tum ozellikler
     console.log(arrayIndex)
-    let {name,link,artist,image} = songsList[arrayIndex]
+    let { name, link, artist, image } = songsList[arrayIndex]
     audio.src = link
     songName.innerHTML = name
     songArtist.innerHTML = artist
     songImage.src = image
 
-    //sureyi gosterme
-    audio.onloadedmetadata = ()=>{
-        maxDuration.innerText = timeFormatter(audio.duration)
+    //sureyi goster
+    audio.onloadedmetadata = () => {
+        maxDuration.innerText = timeFormatter(audio.duration)//320
     }
     playListContainer.classList.add("hide")
     playAudio()
 }
 
-//sarkıyı oynatma
-const playAudio = ()=>{
+//sarkiyi oynat
+const playAudio = () => {
     audio.play()
-    pauseButton.classList.remove('hide')
-    playButton.classList.add('hide')
+    pauseButton.classList.remove('hide') //gorund
+    playButton.classList.add('hide') //kaybol
 }
 
-//sarkıyı tekrar calma
-repeatButton.addEventListener('click',()=>{
-    if(repeatButton.classList.contains('active')) {
+//sarkiyi tekrar
+repeatButton.addEventListener('click', () => {
+    if (repeatButton.classList.contains('active')) {
         repeatButton.classList.remove('active')
         audio.loop = false
-    }else{
+        console.log("tekrar kapatildi")
+    } else {
         repeatButton.classList.add('active')
         audio.loop = true
+        console.log('tekrar acik')
     }
 })
-
-//sonraki sarkıya gecme
-const nextSong = () =>{
-    //dongü acık çalıyorsa
-    if(loop){
-        if(index==(songsList.length - 1)){
-            //başa sar
+//sonraki sarkiya git
+const nextSong = () => {
+    //eger dongu acik caliyorsa
+    if (loop) {
+        if (index == (songsList.length - 1)) {
+            //sondayda basa sar
             index = 0
-        }else {
-            index+=1
+        } else {
+            index += 1
         }
         setSong(index)
     } else {
-        let randIndex = Math.floor(Math.random() + songsList.length)
+        let randIndex = Math.floor(Math.random() * songsList.length)
+        console.log(randIndex)
         setSong(randIndex)
-        
     }
-
     playAudio()
 }
 
-// sarkıyı durdur
-const pauseAudio = () =>{
+//sarkiyi durdur
+const pauseAudio = () => {
     audio.pause()
     pauseButton.classList.add('hide')
     playButton.classList.remove('hide')
 }
 
 //onceki sarki
-const previousSong = () =>{
-    if(index>0){
+const previousSong = () => {
+    if (index > 0) {
         pauseAudio()
-        index-=1
+        index -= 1
     } else {
         index = songsList.length - 1
     }
@@ -166,48 +169,49 @@ const previousSong = () =>{
     playAudio()
 }
 
-// siradakine geç
-audio.onended = () =>{
+//siradaki sarkiya gec
+audio.onended = () => {
     nextSong()
 }
 
-// shuffle songs
-shuffleButton.addEventListener('click',()=>{
-    if(shuffleButton.classList.contains('active')){
+//shuffle songs
+shuffleButton.addEventListener('click', () => {
+    if (shuffleButton.classList.contains('active')) {
         shuffleButton.classList.remove('active')
         loop = true
+        console.log("karistirma kapali")
     } else {
         shuffleButton.classList.add('active')
         loop = false
+        console.log("karistirma acik")
     }
 })
 
-
 //play button
-playButton.addEventListener('click',playAudio)
+playButton.addEventListener('click', playAudio)
 
 //next button
-nextButton.addEventListener('click',nextSong)
+nextButton.addEventListener('click', nextSong)
 
 //pause button
-pauseButton.addEventListener('click',pauseAudio)
+pauseButton.addEventListener('click', pauseAudio)
 
 //prev button
-prevButton.addEventListener('click',previousSong)
+prevButton.addEventListener('click', previousSong)
 
 isTouchDevice()
-progressBar.addEventListener(events[deviceType].click, (event)=>{
-    //progress bar baslat
+progressBar.addEventListener(events[deviceType].click, (event) => {
+    //progress bari baslat
     let coordStart = progressBar.getBoundingClientRect().left
 
     //fare ile dokunma
-    let coorEnd = !isTouchDevice() ? event.clientX : event.touches[0].clientX
-    let progress = (coorEnd - coordStart) / progressBar.offsetWidth
+    let coordEnd = !isTouchDevice() ? event.clientX : event.touches[0].clientX
+    let progress = (coordEnd - coordStart) / progressBar.offsetWidth
 
-    //genisligi koyma 
+    //genisligi ata
     currentProgress.style.width = progress * 100 + "%"
 
-    //zamanı ata
+    //zamani ata
     audio.currentTime = progress * audio.duration
 
     //oynat
@@ -216,24 +220,25 @@ progressBar.addEventListener(events[deviceType].click, (event)=>{
     playButton.classList.add('hide')
 })
 
-// zaman aktıkça current progress ılerleme
+//zaman aktikca guncelle
 setInterval(() => {
     currentTimeRef.innerHTML = timeFormatter(audio.currentTime)
-    currentProgress.style.width = (audio.currentTime/audio.duration.toFixed(3)) * 100 + "%"
+    currentProgress.style.width = (audio.currentTime / audio.duration.toFixed(3)) * 100 + "%"
 }, 1000);
 
-// zaman güncellemesi
-audio.addEventListener('timeupdate',()=>{
+//zaman guncellenmesi
+audio.addEventListener('timeupdate', () => {
     currentTimeRef.innerText = timeFormatter(audio.currentTime)
 })
- 
-window.onload = ()=>{
+
+
+window.onload = () => {
     index = 0
     setSong(index)
     initPlayList()
 }
 
-const initPlayList = ()=>{
+const initPlayList = () => {
     for (let i in songsList) {
         playListSongs.innerHTML += `<li class="playlistSong"
         onclick="setSong(${i})">
@@ -245,7 +250,7 @@ const initPlayList = ()=>{
                 ${songsList[i].name}
             </span>
             <span id="playlist-song-album">
-                ${songsList[i].artist}
+            ${songsList[i].artist}
             </span>
         </div>
         </li>
@@ -253,12 +258,12 @@ const initPlayList = ()=>{
     }
 }
 
-//sarkı listesini gösterme
+//sarki listesini goster
 playListButton.addEventListener('click',()=>{
     playListContainer.classList.remove('hide')
 })
 
-//sarkı listesini göster
+//sarki listesini kapat
 closeButton.addEventListener('click',()=>{
     playListContainer.classList.add('hide')
 })
